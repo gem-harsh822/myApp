@@ -25,3 +25,12 @@
 #container a {
   text-decoration: none;
 }
+.image {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%; /*don't forget prefixes*/
+  background-image: url("../../assets/no-image.jpg");
+  background-position: center center;
+  /* as mentioned by Vad: */
+  background-size: cover;
+}

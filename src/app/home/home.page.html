@@ -1,21 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title> Ionic registeration form </ion-title>
+    <ion-title> Ionic registeration form</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content padding>
+
+<ion-content [fullscreen]="true">
   <ion-card>
-    <img *ngIf="!fileUrl" src="../../assets/no-image.jpg" />
-    <img *ngIf="fileUrl" src="{{fileUrl}}" />
     <ion-card-content>
-      <ion-button color="medium" size="large" (click)="cropUpload()">
-        <ion-icon slot="icon-only" name="camera"></ion-icon>
-      </ion-button>
+      <div id="container">
+        <ion-grid>
+          <ion-row>
+            <div *ngIf="url" class="image">
+              <img [src]="santizeUrl(url)" height="100" width="150" />
+            </div>
+            <div *ngIf="imageurl">
+              <img [src]="santizeUrl(imageurl)" height="100" width="150" />
+            </div>
+          </ion-row>
+          <ion-row>
+            <p>
+              <ion-button (click)="selectimageOptions()"
+                >Select Image</ion-button
+              >
+            </p>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ion-card-content>
   </ion-card>
-</ion-content>
-<ion-content [fullscreen]="true">
-  <div class="ion-padding">
+
+  <div>
     <form [formGroup]="form" (ngSubmit)="saveDetails()">
       <ion-list>
         <ion-item class="ion-margin-bottom">
@@ -86,7 +100,9 @@
           <ion-button color="success" [disabled]="!form.valid" type="submit"
             >Save Details</ion-button
           >
-          <ion-button color="danger" (click)="showDetails()">Show Details</ion-button>
+          <ion-button color="danger" (click)="showDetails()"
+            >Show Details</ion-button
+          >
         </ion-item>
       </ion-list>
     </form>
@@ -102,22 +118,22 @@
   </ion-item>
 </ion-content> -->
 
-
-<ion-grid>
-  <ion-row *ngIf="crud.USERS.length>0">
-    <ion-col><strong>Name</strong></ion-col>
-    <ion-col><strong>Email</strong></ion-col>
-    <ion-col><strong>Dob</strong></ion-col>
-  </ion-row>
-  <ion-row *ngFor="let user of crud.USERS">
-    <ion-col>
-      <div>{{ user.name }}</div>
-    </ion-col>
-    <ion-col>
-      <div>{{ user.email }}</div>
-    </ion-col>
-    <ion-col>
-      <div>{{ user.dob }}</div>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+  <ion-grid>
+    <ion-row *ngIf="crud.USERS?.length > 0">
+      <ion-col><strong>Name</strong></ion-col>
+      <ion-col><strong>Email</strong></ion-col>
+      <ion-col><strong>Dob</strong></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let user of crud.USERS">
+      <ion-col>
+        <div>{{ user.name }}</div>
+      </ion-col>
+      <ion-col>
+        <div>{{ user.email }}</div>
+      </ion-col>
+      <ion-col>
+        <div>{{ user.dob }}</div>
+      </ion-col>
+    </ion-row>
+  </ion-grid></ion-content
+>

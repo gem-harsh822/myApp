@@ -93,11 +93,31 @@
   </div>
 
   <!-- Read -->
-  <ion-item *ngFor="let user of crud.USERS">
+  <!-- <ion-item *ngFor="let user of crud.USERS">
     <ion-label>
       <h2><strong>{{ user.name }}</strong></h2>
       <p>{{ user.email }}</p>
       <p>{{ user.dob }}</p>
     </ion-label>
   </ion-item>
-</ion-content>
+</ion-content> -->
+
+
+<ion-grid>
+  <ion-row *ngIf="crud.USERS.length>0">
+    <ion-col><strong>Name</strong></ion-col>
+    <ion-col><strong>Email</strong></ion-col>
+    <ion-col><strong>Dob</strong></ion-col>
+  </ion-row>
+  <ion-row *ngFor="let user of crud.USERS">
+    <ion-col>
+      <div>{{ user.name }}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{ user.email }}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{ user.dob }}</div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

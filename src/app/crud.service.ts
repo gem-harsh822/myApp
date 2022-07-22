@@ -19,26 +19,29 @@ export class CrudService {
     // console.log();
     console.log('inside connection method');
     this.platform.ready().then(() => {
-       this.sqlite
+      this.sqlite
         .create({
           name: 'users',
           location: 'default',
         })
         .then((db: SQLiteObject) => {
           this.dbInstance = db;
-          db.executeSql("CREATE TABLE IF NOT EXISTS users (name TEXT,email TEXT,dob TEXT)",
+          db.executeSql(
+            'CREATE TABLE IF NOT EXISTS users (name TEXT,email TEXT,dob TEXT)',
             []
           )
             .then((res) => {
-              console.log("Executed SQL",res);
+              console.log('Executed SQL', res);
               // alert(JSON.stringify(res));
             })
             .catch((error) => console.error(JSON.stringify(error)));
-            console.log("Database connected");
-            
+          console.log('Database connected');
         })
         .catch((error) => alert(JSON.stringify(error)));
     });
+    // if(this.USERS.length !== 0) {
+    //   this.getAllUsers();
+    // }
   }
 
   // Crud
@@ -47,21 +50,22 @@ export class CrudService {
     // this.databaseConn();
     console.log(n + ' ' + e + ' ' + d);
     console.log(this.dbInstance);
-    
+
     if (!n.length || !e.length || !d.length) {
       alert(n + ' ' + e + ' ' + d + ' ' + 'Provide all details');
       return;
     }
     this.dbInstance
-      .executeSql(
-        'INSERT INTO users (name, email,dob) VALUES (?,?,?)',
-        [n,e,d]
-      )
+      .executeSql('INSERT INTO users (name, email,dob) VALUES (?,?,?)', [
+        n,
+        e,
+        d,
+      ])
       .then(
         () => {
           // alert('Success');
-          console.log("Insert Query Executed");
-          // this.getAllUsers();
+          console.log('Insert Query Executed');
+          this.getAllUsers();
         },
         (e) => {
           alert(JSON.stringify(e.err));
@@ -70,22 +74,20 @@ export class CrudService {
   }
 
   getAllUsers() {
-    // return new Promise((resolve, reject) => {
-      this.dbInstance.executeSql('SELECT * FROM users',[]).then(
-        (res) => {
-          this.USERS = [];
-          if (res.rows.length > 0) {
-            for (var i = 0; i < res.rows.length; i++) {
-              this.USERS.push(res.rows.item(i));
-            }
-            return this.USERS;
+    this.dbInstance.executeSql('SELECT * FROM users', []).then(
+      (res) => {
+        this.USERS = [];
+        if (res.rows.length > 0) {
+          for (var i = 0; i < res.rows.length; i++) {
+            this.USERS.push(res.rows.item(i));
           }
-        },
-        (e) => {
-          alert(JSON.stringify(e));
+          return this.USERS;
         }
-      );
-    // });
+      },
+      (e) => {
+        alert(JSON.stringify(e));
+      }
+    );
   }
 
   // Get user

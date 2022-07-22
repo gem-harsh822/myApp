@@ -48,12 +48,12 @@ export class HomePage {
   }
   showDetails() {
     this.crud.getAllUsers();
-    console.log(this.crud.getAllUsers());
+    // console.log(this.crud.getAllUsers());
     
   }
 
   createUser() {
-    console.log("fdsfdf"+this.name, this.email, this.dob);
+    // console.log("fdsfdf"+this.name, this.email, this.dob);
     
     this.crud.addItem(this.name, this.email, this.dob);
   }

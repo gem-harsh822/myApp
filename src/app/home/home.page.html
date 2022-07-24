@@ -5,17 +5,26 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-card>
+  <!-- <div class="container mb-3">
+    <div class="outer mb-5">
+      <img src="{{photo}}" />
+      <div class="inner" (click)="openModal()">
+        <ion-icon name="camera" class="camera-icon"></ion-icon>
+      </div>
+    </div>
+  </div> -->
+
+  <ion-card class="card">
     <ion-card-content>
       <div id="container">
         <ion-grid>
           <ion-row>
-            <div *ngIf="url" class="image">
-              <img [src]="santizeUrl(url)" height="100" width="150" />
-            </div>
-            <div *ngIf="imageurl">
-              <img [src]="santizeUrl(imageurl)" height="100" width="150" />
-            </div>
+            <!-- <div *ngIf="url" class="image"> -->
+              <!-- <img src="{{url2}}" height="100" width="150" /> -->
+            <!-- </div> -->
+            <!-- <div *ngIf="imageurl"> -->
+              <img src="{{url2}}" height="100" width="150" />
+            <!-- </div> -->
           </ion-row>
           <ion-row>
             <p>

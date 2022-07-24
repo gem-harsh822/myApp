@@ -3,9 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { CrudService } from '../crud.service';
 import { ActionSheetController } from '@ionic/angular';
-import { ImagePicker ,ImagePickerOptions} from '@awesome-cordova-plugins/image-picker/ngx';
+import {
+  ImagePicker,
+  ImagePickerOptions,
+} from '@awesome-cordova-plugins/image-picker/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
-import { Camera , CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
+import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { DomSanitizer } from '@angular/platform-browser';
 @Component({
@@ -21,7 +24,7 @@ export class HomePage {
   dob: Date;
   imageurl: any;
   securepath: any = window;
-  url: any;
+  url2: any;
 
   constructor(
     private sqlite: SQLite,
@@ -29,10 +32,10 @@ export class HomePage {
     private crud: CrudService,
     private actionsheet: ActionSheetController,
     private camera: Camera,
-    private file:File,
-    private imagepicker:ImagePicker,
-    private crop:Crop,
-    private domsanitize:DomSanitizer
+    private file: File,
+    private imagepicker: ImagePicker,
+    private crop: Crop,
+    private domsanitize: DomSanitizer
   ) {
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.minLength(5)]],
@@ -48,6 +51,7 @@ export class HomePage {
       // confirmPassword: [null, [Validators.required]],
     });
     // this.crud.databaseConn();
+    this.url2 = "/assets/no-image.jpg";
   }
   saveDetails() {
     this.submitted = true;
@@ -71,6 +75,19 @@ export class HomePage {
 
     this.crud.addItem(this.name, this.email, this.dob);
   }
+  cameraOptions: CameraOptions = {
+    quality: 100,
+    destinationType: this.camera.DestinationType.DATA_URL,
+    encodingType: this.camera.EncodingType.JPEG,
+    mediaType: this.camera.MediaType.PICTURE,
+    allowEdit: true
+   }
+  gelleryOptions: CameraOptions = {
+    quality: 100,
+    sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+    destinationType: this.camera.DestinationType.DATA_URL,
+    allowEdit: true
+    }
   async selectimageOptions() {
     const actionsheet = await this.actionsheet.create({
       header: 'Select image Source',
@@ -78,14 +95,14 @@ export class HomePage {
         {
           text: 'Load from Gallery',
           handler: () => {
-            this.pickImagesFromLibrary();
+            this.chooseImage(this.gelleryOptions);
             console.log('Image Selected from Gallery');
           },
         },
         {
           text: 'Select Camera',
           handler: () => {
-            this.chooseFromCamera(this.camera.PictureSourceType.CAMERA);
+            this.chooseImage(this.cameraOptions);
             console.log('Camera Selected');
           },
         },
@@ -98,43 +115,45 @@ export class HomePage {
     await actionsheet.present();
   }
 
-  chooseFromCamera(sourceType){
-    const options: CameraOptions = {
-       quality: 100,
-       mediaType: this.camera.MediaType.PICTURE,
-       destinationType: this.camera.DestinationType.FILE_URI,
-       encodingType: this.camera.EncodingType.JPEG,
-       sourceType: sourceType,
-    };
-
-    this.camera.getPicture(options).then((result) => {
-      console.log('Camera URL',result);
-      // this.imageurl = result;
-      this.imageurl = this.securepath.Ionic.WebView.convertFileSrc(result);
-      // this.imageurl = 'data:image/jpeg;base64,'+result;
-    }, error=>{
-      console.log('Error CAMERA', error);
-    });
+  chooseImage(options) {
+    this.camera.getPicture(options).then(
+      (result) => {
+        console.log('Camera URL', result);
+        // this.imageurl = result;
+        this.url2 = 'data:image/jpeg;base64,' + result;
+        // this.imageurl = 'data:image/jpeg;base64,'+result;
+      },
+      (error) => {
+        console.log('Error CAMERA', error);
+      }
+    );
   }
 
-  santizeUrl(imageUrl){
+  santizeUrl(imageUrl) {
     return this.domsanitize.bypassSecurityTrustUrl(imageUrl);
   }
 
-  pickImagesFromLibrary(){
-    const options: ImagePickerOptions = {
-      quality: 100,
-      maximumImagesCount: 1,
-    };
-    this.imagepicker.getPictures(options).then((imageresult)=> {
-    console.log('image Picker Results', imageresult);
+  pickImagesFromLibrary() {
+    // const options: ImagePickerOptions = {
+    //   quality: 100,
+    //   maximumImagesCount: 1,
+    // };
+    this.camera
+      .getPicture({
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: this.camera.DestinationType.DATA_URL,
+      })
+      .then((imageresult) => {
+        this.url2 = 'data:image/jpeg;base64,' + imageresult;
+        // console.log('image Picker Results', imageresult);
 
-     for(let i=0; i<imageresult.length; i++){
-      this.url = this.securepath.Ionic.WebView.convertFileSrc(imageresult[i]);
-     }
-    }, rror=>{
-      console.log('Image Picker Error:', rror);
-    });
+        //  for(let i=0; i<imageresult.length; i++){
+        //   this.url = this.securepath.Ionic.WebView.convertFileSrc(imageresult[i]);
+        //  }
+      })
+      .catch((e) => {
+        console.log('Image Picker Error:', e);
+      });
   }
 
   // remove(user) {

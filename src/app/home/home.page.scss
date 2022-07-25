@@ -38,3 +38,41 @@
 .card {
   height: 50% !important;  
 }
+
+.container {
+  width: 120px;
+  height: 100px;
+  // display: block;
+  // margin: 0 auto;
+}
+
+.outer {
+  width: 100% !important;
+  height: 100% !important;
+  // border-radius: 30%;
+  position: relative;
+  
+}
+
+img {
+  border-radius: 30%;
+}
+
+.inner {
+  background-color: rgb(159, 152, 152);
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-icon {
+  height: 15px;
+  width: 15px;
+  color: white;
+}

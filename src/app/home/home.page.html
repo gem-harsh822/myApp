@@ -5,39 +5,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <div class="container mb-3">
+  <div class="container my-4 mx-auto">
     <div class="outer mb-5">
-      <img src="{{photo}}" />
-      <div class="inner" (click)="openModal()">
+      <img src="{{croppedImagepath}}" height="100px" width="100px" />
+      <div class="inner" (click)="selectimageOptions()">
         <ion-icon name="camera" class="camera-icon"></ion-icon>
       </div>
     </div>
-  </div> -->
-
-  <ion-card class="card">
-    <ion-card-content>
-      <div id="container">
-        <ion-grid>
-          <ion-row>
-            <!-- <div *ngIf="url" class="image"> -->
-              <!-- <img src="{{url2}}" height="100" width="150" /> -->
-            <!-- </div> -->
-            <!-- <div *ngIf="imageurl"> -->
-              <img src="{{url2}}" height="100" width="150" />
-            <!-- </div> -->
-          </ion-row>
-          <ion-row>
-            <p>
-              <ion-button (click)="selectimageOptions()"
-                >Select Image</ion-button
-              >
-            </p>
-          </ion-row>
-        </ion-grid>
-      </div>
-    </ion-card-content>
-  </ion-card>
-
+  </div>
   <div>
     <form [formGroup]="form" (ngSubmit)="saveDetails()">
       <ion-list>
@@ -117,16 +92,6 @@
     </form>
   </div>
 
-  <!-- Read -->
-  <!-- <ion-item *ngFor="let user of crud.USERS">
-    <ion-label>
-      <h2><strong>{{ user.name }}</strong></h2>
-      <p>{{ user.email }}</p>
-      <p>{{ user.dob }}</p>
-    </ion-label>
-  </ion-item>
-</ion-content> -->
-
   <ion-grid>
     <ion-row *ngIf="crud.USERS?.length > 0">
       <ion-col><strong>Name</strong></ion-col>
@@ -144,5 +109,5 @@
         <div>{{ user.dob }}</div>
       </ion-col>
     </ion-row>
-  </ion-grid></ion-content
->
+  </ion-grid>
+</ion-content>

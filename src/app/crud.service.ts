@@ -39,18 +39,14 @@ export class CrudService {
         })
         .catch((error) => alert(JSON.stringify(error)));
     });
-    // if(this.USERS.length !== 0) {
-    //   this.getAllUsers();
-    // }
   }
 
   // Crud
   public addItem(n, e, d) {
     // validation
     // this.databaseConn();
-    console.log(n + ' ' + e + ' ' + d);
-    console.log(this.dbInstance);
-
+    // console.log(n + ' ' + e + ' ' + d);
+    // console.log(this.dbInstance);
     if (!n.length || !e.length || !d.length) {
       alert(n + ' ' + e + ' ' + d + ' ' + 'Provide all details');
       return;

@@ -22,7 +22,7 @@ export class HomePage {
   name: string = '';
   email: string = '';
   dob: Date;
-  imageurl: any;
+  croppedImagepath: string = '';
   securepath: any = window;
   url2: any;
 
@@ -51,7 +51,7 @@ export class HomePage {
       // confirmPassword: [null, [Validators.required]],
     });
     // this.crud.databaseConn();
-    this.url2 = "/assets/no-image.jpg";
+    this.croppedImagepath = '/assets/no-image.jpg';
   }
   saveDetails() {
     this.submitted = true;
@@ -77,17 +77,19 @@ export class HomePage {
   }
   cameraOptions: CameraOptions = {
     quality: 100,
-    destinationType: this.camera.DestinationType.DATA_URL,
+    destinationType: this.camera.DestinationType.FILE_URI,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE,
-    allowEdit: true
-   }
+    allowEdit: false,
+  };
   gelleryOptions: CameraOptions = {
     quality: 100,
     sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-    destinationType: this.camera.DestinationType.DATA_URL,
-    allowEdit: true
-    }
+    destinationType: this.camera.DestinationType.FILE_URI,
+    encodingType: this.camera.EncodingType.JPEG,
+    mediaType: this.camera.MediaType.PICTURE,
+    allowEdit: false,
+  };
   async selectimageOptions() {
     const actionsheet = await this.actionsheet.create({
       header: 'Select image Source',
@@ -95,14 +97,14 @@ export class HomePage {
         {
           text: 'Load from Gallery',
           handler: () => {
-            this.chooseImage(this.gelleryOptions);
+            this.chooseImage(this.gelleryOptions,0);
             console.log('Image Selected from Gallery');
           },
         },
         {
           text: 'Select Camera',
           handler: () => {
-            this.chooseImage(this.cameraOptions);
+            this.chooseImage(this.cameraOptions,1);
             console.log('Camera Selected');
           },
         },
@@ -115,46 +117,79 @@ export class HomePage {
     await actionsheet.present();
   }
 
-  chooseImage(options) {
+  chooseImage(options,type) {
     this.camera.getPicture(options).then(
       (result) => {
         console.log('Camera URL', result);
         // this.imageurl = result;
-        this.url2 = 'data:image/jpeg;base64,' + result;
+        // this.url2 = 'data:image/jpeg;base64,' + result;
         // this.imageurl = 'data:image/jpeg;base64,'+result;
+        this.cropImage(type===0?'file://'+result:result);
       },
       (error) => {
         console.log('Error CAMERA', error);
       }
     );
   }
+  cropImage(fileUrl) {
+    // let url = 'file://' + fileUrl;
+    this.crop.crop(fileUrl, { quality: 100 }).then(
+      (newPath) => {
+        this.showCroppedImage(newPath.split('?')[0]);
+      },
+      (error) => {
+        console.log(fileUrl);
+        console.log('Error cropping image' + error);
 
-  santizeUrl(imageUrl) {
-    return this.domsanitize.bypassSecurityTrustUrl(imageUrl);
+        // alert('Error cropping image' + error);
+      }
+    );
   }
 
-  pickImagesFromLibrary() {
-    // const options: ImagePickerOptions = {
-    //   quality: 100,
-    //   maximumImagesCount: 1,
-    // };
-    this.camera
-      .getPicture({
-        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: this.camera.DestinationType.DATA_URL,
-      })
-      .then((imageresult) => {
-        this.url2 = 'data:image/jpeg;base64,' + imageresult;
-        // console.log('image Picker Results', imageresult);
+  showCroppedImage(ImagePath) {
+    // this.isLoading = true;
+    var copyPath = ImagePath;
+    var splitPath = copyPath.split('/');
+    var imageName = splitPath[splitPath.length - 1];
+    var filePath = ImagePath.split(imageName)[0];
 
-        //  for(let i=0; i<imageresult.length; i++){
-        //   this.url = this.securepath.Ionic.WebView.convertFileSrc(imageresult[i]);
-        //  }
-      })
-      .catch((e) => {
-        console.log('Image Picker Error:', e);
-      });
+    this.file.readAsDataURL(filePath, imageName).then(
+      (base64) => {
+        this.croppedImagepath = base64;
+        // this.isLoading = false;
+      },
+      (error) => {
+        alert('Error in showing image' + error);
+        // this.isLoading = false;
+      }
+    );
   }
+  // santizeUrl(imageUrl) {
+  //   return this.domsanitize.bypassSecurityTrustUrl(imageUrl);
+  // }
+
+  // pickImagesFromLibrary() {
+  //   // const options: ImagePickerOptions = {
+  //   //   quality: 100,
+  //   //   maximumImagesCount: 1,
+  //   // };
+  //   this.camera
+  //     .getPicture({
+  //       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+  //       destinationType: this.camera.DestinationType.DATA_URL,
+  //     })
+  //     .then((imageresult) => {
+  //       this.url2 = 'data:image/jpeg;base64,' + imageresult;
+  //       // console.log('image Picker Results', imageresult);
+
+  //       //  for(let i=0; i<imageresult.length; i++){
+  //       //   this.url = this.securepath.Ionic.WebView.convertFileSrc(imageresult[i]);
+  //       //  }
+  //     })
+  //     .catch((e) => {
+  //       console.log('Image Picker Error:', e);
+  //     });
+  // }
 
   // remove(user) {
   //   this.crud.deleteUser(user);
